@@ -1,0 +1,185 @@
+<link href="./tailwind.css" rel="stylesheet">
+<style>
+    body {
+        background-color: #232323;
+    }
+    .unison {
+        position: relative;
+    }
+    .unison-line {
+        background-color: #00f399; 
+        width: 2px; 
+        height:100%;
+        position: absolute;
+        top: 20px;
+    }
+
+    .slider {
+        margin: 15px 0;
+        -webkit-appearance: none;  /* Override default CSS styles */
+        appearance: none;
+        width: 100%; /* Full-width */
+        height: 2px; /* Specified height */
+        background: #a77aef; /* Grey background */
+        outline: none; /* Remove outline */
+        opacity: 1; /* Set transparency (for mouse-over effects on hover) */
+    }
+
+    .slider::-webkit-slider-thumb {
+        -webkit-appearance: none; /* Override default look */
+        appearance: none;
+        width: 10px; /* Set a specific slider handle width */
+        height: 20px; /* Slider handle height */
+        border: 1px solid #a77aef;
+        border-radius: 1px;
+        background: #232323; /* Green background */
+        cursor: pointer; /* Cursor on hover */
+    }
+
+    .reverb-circle {
+        width: 10px;
+        height: 10px;
+        border: 2px #f30089 solid;
+        border-radius: 100%;
+    }
+
+</style>
+<body class="font-sans font-light tracking-tight text-sm select-none">
+    <img src="./colors.png" alt="" class="hidden">
+
+    <div class="flex">
+        <canvas id="scope" height=100 width=150 class="self-start"></canvas>
+        
+        <div class="flex">
+            <div>
+			    <h2 class="text-white font-bold">OSC</h2>
+                <select class="type" name="type" style="background-color: #1d1d1d; color: white" class="mb-2">
+                    <option value="sine">SINE</option>
+                    <option value="triangle">TRIANGLE</option>
+                    <option value="sawtooth" selected>SAWTOOTH</option>
+                    <option value="square">SQUARE</option>
+                </select>
+                <div class="flex flex-col w-24">
+                    <label for="" style="color: #00f399;">VOICES</label>
+                    <input type="range" min="1" max="8" value="6" class="voices slider">
+                </div>
+                <div class="flex flex-col w-24">
+                    <label for="" style="color: #b642ff;">SPREAD</label>
+                    <input type="range" class="spread slider" min="0" max="255" value="50"/>
+                </div>
+                <div class="flex flex-col w-24">
+                    <label for="" style="color: #ef3c5c;">WIDTH</label>
+                    <input type="range" class="width slider" min="0" max="255" value="200"/>
+                </div>
+            </div>
+            <div class="unison" style="height:100px;width:150px;overflow: hidden; background-color: #273330;"></div>   
+        </div>
+        <div class="flex">
+            <canvas class="adsr-amplitude self-start" height=102 width=180 style="background-color: #272733;"></canvas>
+            <div class="amplitude">
+			<h2 class="text-white font-bold">AMPLITUDE</h2>
+                <div class="flex flex-col w-24">
+                    <label for="" style="color: #00f399;">ATTACK</label>
+                    <input type="range" class="attack slider" min="0" max="2" step="0.01" value="0.01">
+                </div>
+                <div class="flex flex-col w-24">
+                    <label for="" style="color: #b642ff;">DECAY</label>
+                    <input type="range" class="decay slider" min="0.01" max="2" step="0.01" value="1.0"/>
+                </div>
+                <div class="flex flex-col w-24">
+                    <label for="" style="color: #ef3c5c;">SUSTAIN</label>
+                    <input type="range" class="sustain slider" min="0" max="1" step="0.01" value="0.5"/>
+                </div>
+                <div class="flex flex-col w-24">
+                    <label for="" style="color: #60bdff;">RELEASE</label>
+                    <input type="range" class="release slider" min="0.02" max="3" step="0.01" value="1.5"/>
+                </div>
+            </div>
+        </div>
+        <div class="flex">
+            <canvas class="adsr-filter self-start" height=102 width=180 style="background-color: #272733;"></canvas>
+            <div class="filter-envelope">
+				<h2 class="text-white font-bold">FILTER ENVELOPE</h2>
+                <div class="flex flex-col w-24">
+                    <label for="" style="color: #00f399;">ATTACK</label>
+                    <input type="range" class="attack slider" min="0" max="2" step="0.01" value="0.01">
+                </div>
+                <div class="flex flex-col w-24">
+                    <label for="" style="color: #b642ff;">DECAY</label>
+                    <input type="range" class="decay slider" min="0.01" max="2" step="0.01" value="1.0"/>
+                </div>
+                <div class="flex flex-col w-24">
+                    <label for="" style="color: #ef3c5c;">SUSTAIN</label>
+                    <input type="range" class="sustain slider" min="0" max="1" step="0.01" value="0.5"/>
+                </div>
+                <div class="flex flex-col w-24">
+                    <label for="" style="color: #60bdff;">RELEASE</label>
+                    <input type="range" class="release slider" min="0" max="3" step="0.01" value="1.5"/>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="simple-osc">
+		<h2 class="text-white font-bold">SIMPLE OSC</h2>
+        <div class="flex flex-col w-24">
+            <label for="" style="color: #00f399;">OCTAVE</label>
+            <input type="range" class="octave slider" min="-3" max="3" step="1" value="-1">
+        </div>
+        <div class="flex flex-col w-24">
+            <label for="" style="color: #00f399;">VOLUME</label>
+            <input type="range" class="volume slider" min="0" max="255" step="1" value="0">
+        </div>
+    </div>
+
+    <div class="filter mt-6">
+		<h2 class="text-white font-bold">FILTER</h2>
+        <div class="flex flex-col w-24">
+            <label for="" style="color: #00f399;">FREQ</label>
+            <input type="range" class="frequency slider" min="0" max="255" step="1" value="120">
+        </div>
+        <div class="flex flex-col w-24">
+            <label for="" style="color: #b642ff;">RESONANCE</label>
+            <input type="range" class="resonance slider" min="0.01" max="20" step="0.01" value="0.7"/>
+        </div>
+        <div class="flex flex-col w-24">
+            <label for="" style="color: #b642ff;">ENVELOPE</label>
+            <input type="range" class="envelope-ratio slider" min="0" max="12" step="0.1" value="0"/>
+        </div>
+    </div>
+	
+	<div class="reverb mt-6">
+        <h2 class="text-white font-bold">REVERB</h2>
+        <div class="flex">
+            <div>
+                <div class="flex flex-col w-24">
+                    <label for="" style="color: #00f399;">LENGTH</label>
+                    <input type="range" class="length slider" min="1" max="10" step="1" value="0">
+                </div>
+                <div class="flex flex-col w-24">
+                    <label for="" style="color: #b642ff;">WET</label>
+                    <input type="range" class="wet slider" min="0" max="1" step="0.1" value="0"/>
+                </div>
+            </div>
+            <div class="flex items-center justify-center" style="width: 100px;">
+                <div class="reverb-circle"></div>
+            </div>
+        </div>
+        
+    </div>
+	
+	<div class="glide mt-6">
+		<h2 class="text-white font-bold">GLIDE</h2>
+        <div class="flex flex-col w-24">
+            <label for="" style="color: #00f399;">TIME</label>
+            <input type="range" class="time slider" min="0" max="3" step="0.01" value="0">
+        </div>
+        <div class="flex flex-col w-24">
+            <label for="" style="color: #b642ff;">SEMITONES</label>
+            <input type="range" class="semitones slider" min="-12" max="12" step="1" value="0"/>
+        </div>
+    </div>
+
+</body>
+
+<script src="./main.js"></script>
