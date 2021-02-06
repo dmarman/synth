@@ -1,4 +1,4 @@
-import * as Tone from "Tone";
+import * as Tone from 'tone';
 import keyboard from './keyboard';
 import Adsr from './adsr'
 import oscilloscope from './oscilloscope'
